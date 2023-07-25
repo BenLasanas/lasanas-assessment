@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import React, { useState, useEffect } from "react";
+import axios from "axios";
 
 const Home = () => {
   const [territories, setTerritories] = useState([]);
@@ -7,10 +7,12 @@ const Home = () => {
   useEffect(() => {
     const fetchTerritories = async () => {
       try {
-        const response = await axios.get('https://netzwelt-devtest.azurewebsites.net/Territories/All');
+        const response = await axios.get(
+          "https://netzwelt-devtest.azurewebsites.net/Territories/All"
+        );
         setTerritories(response.data.data);
       } catch (error) {
-        console.error('Error', error.message);
+        console.error("Error", error.message);
       }
     };
 

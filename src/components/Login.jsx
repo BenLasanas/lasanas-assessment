@@ -1,41 +1,50 @@
-import React, { useState } from 'react';
-import axios from 'axios';
+import React, { useState } from "react";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 const Login = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
+  const navigate = useNavigate();
 
   const handleLogin = async (e) => {
     e.preventDefault();
 
     try {
-        //const corsProxyUrl = 'https://cors-anywhere.herokuapp.com/';
-        const apiLogin = 'https://netzwelt-devtest.azurewebsites.net/Account/SignIn';
-        const response = await axios.post(apiLogin, {
+      const response = await axios.post(
+        "https://netzwelt-devtest.azurewebsites.net/Account/SignIn",
+        {
           username: username,
-          password: password
-        });
+          password: password,
+        },
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
 
       if (response.status === 200) {
-        console.log("Login Successful");
+        console.log("Authentication successful.");
 
+        sessionStorage.setItem("isLoggedIn", true);
+
+        navigate("/home");
       } else {
-        console.log('Authentication failed:', response.data.message);
-        setErrorMessage('Invalid username or password');
+        console.log(response.data.message);
+        setErrorMessage("Invalid username or password");
       }
     } catch (error) {
-      console.error( error.message);
-      setErrorMessage('Something went wrong');
+      console.error("Authentication failed:", error.message);
+      setErrorMessage("Network Error");
     }
   };
 
-
-
   return (
-    <div >
-      <form  onSubmit={handleLogin}>
-        <div >
+    <div>
+      <form onSubmit={handleLogin}>
+        <div>
           <label htmlFor="username">Username:</label>
           <input
             type="text"
@@ -45,7 +54,7 @@ const Login = () => {
             required
           />
         </div>
-        <div >
+        <div>
           <label htmlFor="password">Password:</label>
           <input
             type="password"
@@ -56,7 +65,7 @@ const Login = () => {
           />
         </div>
         <button type="submit">Login</button>
-        {errorMessage && <p >{errorMessage}</p>}
+        {errorMessage && <p>{errorMessage}</p>}
       </form>
     </div>
   );
